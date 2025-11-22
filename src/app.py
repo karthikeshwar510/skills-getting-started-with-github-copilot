@@ -10,6 +10,7 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.responses import RedirectResponse
 import os
 from pathlib import Path
+from flask import Flask, request, jsonify
 
 app = FastAPI(title="Mergington High School API",
               description="API for viewing and signing up for extracurricular activities")
@@ -77,6 +78,17 @@ activities = {
     }
 }
 
+# Flask app for additional functionality
+flask_app = Flask(__name__)
+
+@app.route('/unregister', methods=['POST'])
+def unregister():
+    data = request.get_json()
+    name = data.get('name')
+    if name in participants:
+        participants.remove(name)
+        return jsonify({'success': True, 'participants': participants})
+    return jsonify({'success': False}), 400
 
 @app.get("/")
 def root():

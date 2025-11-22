@@ -171,3 +171,14 @@ footer {
   padding-right: 0;
   border: none;
 }
+
+#participant-list {
+  list-style: none;
+  padding: 0;
+}
+
+.delete-icon {
+  cursor: pointer;
+  color: red;
+  margin-left: 10px;
+}

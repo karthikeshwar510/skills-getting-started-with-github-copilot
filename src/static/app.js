@@ -101,6 +101,45 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
+  // Function to render participants
+  function renderParticipants(participants) {
+    const list = document.getElementById('participant-list');
+    list.innerHTML = '';
+    participants.forEach(name => {
+      const li = document.createElement('li');
+      li.textContent = name;
+      li.style.display = 'inline-block';
+      li.style.marginRight = '10px';
+
+      const icon = document.createElement('span');
+      icon.innerHTML = '&#128465;'; // Trash can emoji
+      icon.className = 'delete-icon';
+      icon.style.cursor = 'pointer';
+      icon.style.color = 'red';
+      icon.style.marginLeft = '10px';
+      icon.onclick = () => unregisterParticipant(name);
+
+      li.appendChild(icon);
+      list.appendChild(li);
+    });
+  }
+
+  // Function to unregister participant
+  function unregisterParticipant(name) {
+    fetch(`/unregister`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name })
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        // Re-render participants
+        renderParticipants(data.participants);
+      }
+    });
+  }
+
   // Initialize app
   fetchActivities();
 });
